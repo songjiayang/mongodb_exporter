@@ -58,6 +58,7 @@ type ServerStatus struct {
 	OpcountersRepl *OpcountersReplStats `bson:"opcountersRepl"`
 	Mem            *MemStats            `bson:"mem"`
 	Metrics        *MetricsStats        `bson:"metrics"`
+	ReplStatus     *ReplStatus          `bson:"repl"`
 
 	Cursors *Cursors `bson:"cursors"`
 }
@@ -113,6 +114,9 @@ func (status *ServerStatus) Export(ch chan<- prometheus.Metric) {
 	if status.Cursors != nil {
 		status.Cursors.Export(ch)
 	}
+	if status.ReplStatus != nil {
+		status.ReplStatus.Export(ch)
+	}
 }
 
 // Describe describes the server status for prometheus.
@@ -162,6 +166,9 @@ func (status *ServerStatus) Describe(ch chan<- *prometheus.Desc) {
 	}
 	if status.Cursors != nil {
 		status.Cursors.Describe(ch)
+	}
+	if status.ReplStatus != nil {
+		status.ReplStatus.Describe(ch)
 	}
 }
 
